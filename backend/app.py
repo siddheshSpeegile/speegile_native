@@ -3,19 +3,19 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import psycopg2
 import psycopg2.extras  # returns rows as dicts
+import os
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
 
 app = Flask(__name__)
 CORS(app)
 
 # ─── DB Connection ────────────────────────────────────
+# 
 def get_db():
-    return psycopg2.connect(
-        host="localhost",
-        database="speegile_native",      # 👈 your existing DB
-        user="postgres",
-        password="postgresql",
-        port=5432
-    )
+    return psycopg2.connect(DATABASE_URL, sslmode="require")
+
 
 # ─── CREATE ───────────────────────────────────────────
 @app.route("/users", methods=["POST"])
